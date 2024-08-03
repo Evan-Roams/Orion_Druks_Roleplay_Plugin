@@ -1,0 +1,22 @@
+main: com.Evan_Roams.Os_Druks_Rp_P
+version: 1.0.0
+name: Orion_Druks_Roleplay_Plugin
+author: Evan_Roams
+api-version: 1.12
+depend: [Vault, Essentials]
+
+permissions:
+  os_druks_rp_p.commands.tablet:
+    description: Permiso para usar el comando /roleplay tablet
+    default: op
+  os_druks_rp_p.commands.tablet.multar:
+    description: Permiso para usar el el multar
+    default: op
+
+commands:
+  roleplay:
+    description: Comando Principal
+    aliases:
+      - mp
+
+
