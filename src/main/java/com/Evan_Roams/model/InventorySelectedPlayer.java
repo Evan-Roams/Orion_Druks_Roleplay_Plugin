@@ -2,14 +2,14 @@ package com.Evan_Roams.model;
 
 import org.bukkit.entity.Player;
 
-public class InventoryPlayer {
+public class InventorySelectedPlayer {
 
     private Player player;
     private InventorySection section;
     private Player selectedPlayer; // Agrega este campo para almacenar al jugador seleccionado para multar
 
 
-    public InventoryPlayer(Player player) {
+    public InventorySelectedPlayer(Player player) {
         this.player = player;
     }
 

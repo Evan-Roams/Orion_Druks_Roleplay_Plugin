@@ -8,15 +8,38 @@ depend: [Vault, Essentials]
 permissions:
   os_druks_rp_p.commands.tablet:
     description: Permiso para usar el comando /roleplay tablet
-    default: op
-  os_druks_rp_p.commands.tablet.multar:
+    default: false
+
+  os_druks_rp_p.policia.multar:
     description: Permiso para usar el el multar
-    default: op
+    default: false
+
+  os_druks_rp_p.policia.servicio:
+    description: Permiso para estar en servicio de policía
+    default: false
+
+  os_druks_rp_p.commands.policia.servicio:
+    description: Permiso para estar en servicio de policía
+    default: false
+
+
 
 commands:
   roleplay:
     description: Comando Principal
     aliases:
       - mp
+  tablet:
+    description: Comando para abrir tablet
+    aliases:
+      - tableta
+  dni:
+    description: Comando para obtener dni
+    aliases:
+      - cedula
+  policia:
+    description: Comando para policía
+    aliases:
+      - 911
 
 

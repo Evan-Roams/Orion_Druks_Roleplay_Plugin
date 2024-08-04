@@ -11,12 +11,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class MainCommand implements CommandExecutor {
+public class TabletCommand implements CommandExecutor {
 
     private Economy economy;
     private Os_Druks_Rp_P plugin;
 
-    public MainCommand(Os_Druks_Rp_P plugin) {
+    public TabletCommand(Os_Druks_Rp_P plugin) {
         this.plugin = plugin;
 
         // Configura Vault Economy
@@ -53,9 +53,6 @@ public class MainCommand implements CommandExecutor {
             if(args[0].equalsIgnoreCase("help")){
 
                 help(sender);
-                
-            } else if (args[0].equalsIgnoreCase("dinero")){
-                showBalance(player);
 
             } else {
                 help(sender);
@@ -64,7 +61,11 @@ public class MainCommand implements CommandExecutor {
 
         } else {
             // /miplugin sin argumento
-            help(sender);
+            if (!sender.hasPermission("os_druks_rp_p.commands.tablet")){
+                player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"No tienes permisos para este comando"));
+                return false;
+            }
+            plugin.getTabletInventoryManager().openMainInventory(new InventoryPlayer(player));
         }
 
         return true;
@@ -73,12 +74,8 @@ public class MainCommand implements CommandExecutor {
 
     public void help(CommandSender sender){
         sender.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f&l--------Comandos--------"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&7- /roleplay help (muestra comandos)"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&7- /roleplay dinero (muestra dinero)"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&7- /tablet (abre la tablet"));
-
+        sender.sendMessage(MessageUtils.getColoredMessage("&7- /tablet (abre tablet)"));
         sender.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f&l--------Comandos--------"));
-
     }
 
     public void showBalance(Player player) {

@@ -1,7 +1,7 @@
 package com.Evan_Roams.commands;
 
 import com.Evan_Roams.Os_Druks_Rp_P;
-import com.Evan_Roams.model.InventoryPlayer;
+import com.Evan_Roams.utils.ItemUtils;
 import com.Evan_Roams.utils.MessageUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
@@ -9,14 +9,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class MainCommand implements CommandExecutor {
+public class DniCommand implements CommandExecutor {
 
     private Economy economy;
     private Os_Druks_Rp_P plugin;
 
-    public MainCommand(Os_Druks_Rp_P plugin) {
+    public DniCommand(Os_Druks_Rp_P plugin) {
         this.plugin = plugin;
 
         // Configura Vault Economy
@@ -64,7 +65,10 @@ public class MainCommand implements CommandExecutor {
 
         } else {
             // /miplugin sin argumento
-            help(sender);
+
+            ItemStack item = ItemUtils.generateDniItem(player.getPlayer());
+            player.getInventory().addItem(item);
+            player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&a DNI Recibido"));
         }
 
         return true;
@@ -73,9 +77,7 @@ public class MainCommand implements CommandExecutor {
 
     public void help(CommandSender sender){
         sender.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f&l--------Comandos--------"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&7- /roleplay help (muestra comandos)"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&7- /roleplay dinero (muestra dinero)"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&7- /tablet (abre la tablet"));
+        sender.sendMessage(MessageUtils.getColoredMessage("&7- /dni (abre la tablet"));
 
         sender.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f&l--------Comandos--------"));
 
