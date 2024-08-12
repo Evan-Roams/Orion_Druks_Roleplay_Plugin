@@ -4,6 +4,7 @@ import com.Evan_Roams.Os_Druks_Rp_P;
 import com.Evan_Roams.model.InventoryPlayer;
 import com.Evan_Roams.model.InventorySection;
 import com.Evan_Roams.utils.MessageUtils;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -70,6 +71,16 @@ public class TabletInventoryManager {
         meta.setLore(lore);
         item.setItemMeta(meta);
         inv.setItem(10, item);
+
+        //Finanzas
+        item = new ItemStack(Material.KNOWLEDGE_BOOK);
+        meta = item.getItemMeta();
+        meta.setDisplayName(MessageUtils.getColoredMessage("&4FINANZAS"));
+        lore = new ArrayList<>();
+        lore.add(MessageUtils.getColoredMessage("&f'Menu Finanzas' -> &9Click Izquierdo "));
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        inv.setItem(11, item);
 
 
         player.openInventory(inv);
@@ -509,26 +520,158 @@ public class TabletInventoryManager {
         meta = item.getItemMeta();
         meta.setDisplayName(MessageUtils.getColoredMessage("&7Atras"));
         item.setItemMeta(meta);
+        inv.setItem(19, item);
+
+        // Dinero en Banco
+        item = new ItemStack(Material.PAPER);
+        meta = item.getItemMeta();
+        meta.setDisplayName(MessageUtils.getColoredMessage("&7Dinero en Banco"));
+        item.setItemMeta(meta);
+        inv.setItem(21, item);
+
+
+        // Enviar DInero
+        item = new ItemStack(Material.PAPER);
+        meta = item.getItemMeta();
+        meta.setDisplayName(MessageUtils.getColoredMessage("&7Enviar Dinero"));
+        item.setItemMeta(meta);
+        inv.setItem(23, item);
+
+        // Prestamos
+        player.openInventory(inv);
+        players.add(inventoryPlayer);
+        item = new ItemStack(Material.BOOK);
+        meta = item.getItemMeta();
+        meta.setDisplayName(MessageUtils.getColoredMessage("&7Prestamos"));
+        item.setItemMeta(meta);
+        inv.setItem(25, item);
+    }
+
+    public void openEnviarDineroInventory(InventoryPlayer inventoryPlayer) {
+        inventoryPlayer.setSection(InventorySection.MENU_ENVIAR_DINERO);
+        Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - ENVIAR DINERO"));
+        Player player = inventoryPlayer.getPlayer();
+
+        // Relleno
+        ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("  ");
+        item.setItemMeta(meta);
+
+        for (int i = 0; i < 54; i++) {
+            inv.setItem(i, item);
+        }
+
+        // Botones de cantidad -1000, -100, -10, -1
+        ItemStack decrease1000 = new ItemStack(Material.REDSTONE);
+        ItemMeta metaDecrease1000 = decrease1000.getItemMeta();
+        metaDecrease1000.setDisplayName(MessageUtils.getColoredMessage("&c-1000"));
+        decrease1000.setItemMeta(metaDecrease1000);
+        inv.setItem(11, decrease1000);
+
+        ItemStack decrease100 = new ItemStack(Material.REDSTONE);
+        ItemMeta metaDecrease100 = decrease100.getItemMeta();
+        metaDecrease100.setDisplayName(MessageUtils.getColoredMessage("&c-100"));
+        decrease100.setItemMeta(metaDecrease100);
+        inv.setItem(12, decrease100);
+
+        ItemStack decrease10 = new ItemStack(Material.REDSTONE);
+        ItemMeta metaDecrease10 = decrease10.getItemMeta();
+        metaDecrease10.setDisplayName(MessageUtils.getColoredMessage("&c-10"));
+        decrease10.setItemMeta(metaDecrease10);
+        inv.setItem(13, decrease10);
+
+        ItemStack decrease1 = new ItemStack(Material.REDSTONE);
+        ItemMeta metaDecrease1 = decrease1.getItemMeta();
+        metaDecrease1.setDisplayName(MessageUtils.getColoredMessage("&c-1"));
+        decrease1.setItemMeta(metaDecrease1);
+        inv.setItem(14, decrease1);
+
+        // Botones de cantidad +1, +10, +100, +1000
+        ItemStack increase1 = new ItemStack(Material.EMERALD);
+        ItemMeta metaIncrease1 = increase1.getItemMeta();
+        metaIncrease1.setDisplayName(MessageUtils.getColoredMessage("&a+1"));
+        increase1.setItemMeta(metaIncrease1);
+        inv.setItem(40, increase1);
+
+        ItemStack increase10 = new ItemStack(Material.EMERALD);
+        ItemMeta metaIncrease10 = increase10.getItemMeta();
+        metaIncrease10.setDisplayName(MessageUtils.getColoredMessage("&a+10"));
+        increase10.setItemMeta(metaIncrease10);
+        inv.setItem(41, increase10);
+
+        ItemStack increase100 = new ItemStack(Material.EMERALD);
+        ItemMeta metaIncrease100 = increase100.getItemMeta();
+        metaIncrease100.setDisplayName(MessageUtils.getColoredMessage("&a+100"));
+        increase100.setItemMeta(metaIncrease100);
+        inv.setItem(42, increase100);
+
+        ItemStack increase1000 = new ItemStack(Material.EMERALD);
+        ItemMeta metaIncrease1000 = increase1000.getItemMeta();
+        metaIncrease1000.setDisplayName(MessageUtils.getColoredMessage("&a+1000"));
+        increase1000.setItemMeta(metaIncrease1000);
+        inv.setItem(43, increase1000);
+
+        // Cantidad actual
+        ItemStack currentAmount = new ItemStack(Material.PAPER);
+        ItemMeta metaCurrentAmount = currentAmount.getItemMeta();
+        metaCurrentAmount.setDisplayName(MessageUtils.getColoredMessage("&eCantidad: " + inventoryPlayer.getStoredAmount()));
+        List<String> lore = new ArrayList<>();
+        lore.add(MessageUtils.getColoredMessage("&f 'Enviar Dinero' -> &5Click Derecho"));
+        meta.setLore(lore);
+        currentAmount.setItemMeta(metaCurrentAmount);
+        inv.setItem(22, currentAmount);
+
+        // Atras
+        ItemStack back = new ItemStack(Material.ARROW);
+        ItemMeta metaBack = back.getItemMeta();
+        metaBack.setDisplayName(MessageUtils.getColoredMessage("&7Atras"));
+        back.setItemMeta(metaBack);
+        inv.setItem(19, back);
+
+        player.openInventory(inv);
+        players.add(inventoryPlayer);
+    }
+
+    public void openEnviarDineroSeleccionarInventory(InventoryPlayer inventoryPlayer) {
+
+        inventoryPlayer.setSection(InventorySection.MENU_ENVIAR_DINERO_SELECCIONAR);
+        Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - ENVIAR DINERO"));
+        Player player = inventoryPlayer.getPlayer();
+
+        //relleno
+        ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("  ");
+        item.setItemMeta(meta);
+
+        for (int i = 0; i < 54; i++) {
+            inv.setItem(i, item);
+        }
+
+
+        //Atras
+        item = new ItemStack(Material.ARROW);
+        meta = item.getItemMeta();
+        meta.setDisplayName(MessageUtils.getColoredMessage("&7Atras"));
+        item.setItemMeta(meta);
+
         inv.setItem(52, item);
 
-        // Multas individuales
-        ItemStack multa0_0 = new ItemStack(Material.PAPER);
-        ItemMeta multa0_0Meta = multa0_0.getItemMeta();
-        multa0_0Meta.setDisplayName(MessageUtils.getColoredMessage("&a0_0: Falta Licencia Vehiculo"));
-        multa0_0.setItemMeta(multa0_0Meta);
-        inv.setItem(0, multa0_0);
+        // Lista de jugadores en línea
+        int slot = 0; // Empezar en el slot 10 y avanzar desde ahí
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            ItemStack playerItem = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+            ItemMeta playerMeta = playerItem.getItemMeta();
+            playerMeta.setDisplayName(MessageUtils.getColoredMessage("&a" + onlinePlayer.getName()));
+            playerItem.setItemMeta(playerMeta);
+            inv.setItem(slot, playerItem);
+            slot++;
 
-        ItemStack multa0_1 = new ItemStack(Material.PAPER);
-        ItemMeta multa0_1Meta = multa0_1.getItemMeta();
-        multa0_1Meta.setDisplayName(MessageUtils.getColoredMessage("&a0_1: Multa por exceso de velocidad"));
-        multa0_1.setItemMeta(multa0_1Meta);
-        inv.setItem(1, multa0_1);
+            // Evitar sobrecargar el inventario
+            if (slot > 51) break; // Limitar el número de jugadores mostrados en el inventario
+        }
 
-        ItemStack multa0_2 = new ItemStack(Material.PAPER);
-        ItemMeta multa0_2Meta = multa0_2.getItemMeta();
-        multa0_2Meta.setDisplayName(MessageUtils.getColoredMessage("&a0_2: Multa por estacionamiento prohibido"));
-        multa0_2.setItemMeta(multa0_2Meta);
-        inv.setItem(2, multa0_2);
 
         player.openInventory(inv);
         players.add(inventoryPlayer);
@@ -546,7 +689,11 @@ public class TabletInventoryManager {
         if (section.equals(InventorySection.MENU_MAIN)) {
             if (slot == 10) {
                 openLegalidadInventory(inventoryPlayer);
+            } else if (slot == 11) {
+                openFinanzasInventory(inventoryPlayer);
             }
+
+
         } else if (section.equals(InventorySection.MENU_LEGALIDAD)) {
             if (slot == 19) {
                 openDniInventory(inventoryPlayer);
@@ -564,16 +711,22 @@ public class TabletInventoryManager {
             } else if (slot == 40) {
                 openMainInventory(inventoryPlayer);
             }
+
+
         } else if (section.equals(InventorySection.MENU_DNI)) {
             if (slot == 52) {
                 openMainInventory(inventoryPlayer);
             } else if (slot == 40){
                 openLegalidadInventory(inventoryPlayer);
             }
+
+
         } else if (section.equals(InventorySection.MENU_LICENCIAS)) {
             if (slot == 40) {
                 openMainInventory(inventoryPlayer);
             }
+
+
         } else if (section.equals(InventorySection.MENU_MISMULTAS)) {
             if (slot == 52) {
                 openMainInventory(inventoryPlayer);
@@ -627,6 +780,8 @@ public class TabletInventoryManager {
                     }
                 }
             }
+
+
         } else if (section.equals(InventorySection.MENU_MULTAR)) {
             if (slot == 52) {
                 openMainInventory(inventoryPlayer);
@@ -643,6 +798,8 @@ public class TabletInventoryManager {
                     }
                 }
             }
+
+
         } else if (section.equals(InventorySection.MENU_SELECCIONAR_MULTA)) {
             if (slot == 52) {
                 openMultarInventory(inventoryPlayer);
@@ -680,6 +837,82 @@ public class TabletInventoryManager {
                     player.sendMessage(MessageUtils.getColoredMessage("&cNo se ha seleccionado un jugador."));
                 }
             }
+        } else if (section.equals(InventorySection.MENU_FINANZAS)) {
+            if (slot == 23) {
+                openEnviarDineroSeleccionarInventory(inventoryPlayer);
+            } else if (slot == 19) {
+                openMainInventory(inventoryPlayer);
+            }
+
+
+        } else if (section.equals(InventorySection.MENU_ENVIAR_DINERO_SELECCIONAR)) {
+            if (slot == 52) {
+                openEnviarDineroInventory(inventoryPlayer);
+            } else {
+                // Seleccionar jugador
+                ItemStack clickedItem = player.getOpenInventory().getTopInventory().getItem(slot);
+                if (clickedItem != null && clickedItem.getType() == Material.SKULL_ITEM) {
+                    String playerName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
+                    Player targetPlayer = Bukkit.getPlayer(playerName);
+
+                    if (targetPlayer != null) {
+                        inventoryPlayer.setSelectedPlayer(targetPlayer); // Guardar jugador seleccionado
+                        openEnviarDineroInventory(inventoryPlayer); // Abrir inventario de selección de dinero a enviar
+                    }
+                }
+            }
+        } else if (section.equals(InventorySection.MENU_ENVIAR_DINERO)) {
+            double currentAmount = inventoryPlayer.getStoredAmount();
+            if (clickType == ClickType.LEFT) {
+
+
+                switch (slot) {
+                    case 11: // -1000
+                        inventoryPlayer.setStoredAmount(currentAmount - 1000);
+                        break;
+                    case 12: // -100
+                        inventoryPlayer.setStoredAmount(currentAmount - 100);
+                        break;
+                    case 13: // -10
+                        inventoryPlayer.setStoredAmount(currentAmount - 10);
+                        break;
+                    case 14: // -1
+                        inventoryPlayer.setStoredAmount(currentAmount - 1);
+                        break;
+                    case 40: // +1
+                        inventoryPlayer.setStoredAmount(currentAmount + 1);
+                        break;
+                    case 41: // +10
+                        inventoryPlayer.setStoredAmount(currentAmount + 10);
+                        break;
+                    case 42: // +100
+                        inventoryPlayer.setStoredAmount(currentAmount + 100);
+                        break;
+                    case 43: // +1000
+                        inventoryPlayer.setStoredAmount(currentAmount + 1000);
+                        break;
+                    case 19: // Atras
+                        openMainInventory(inventoryPlayer);
+                        return;
+                }
+
+                // Actualizar la cantidad en el inventario
+                openEnviarDineroInventory(inventoryPlayer);
+            } else if (slot == 22 && clickType == ClickType.RIGHT && currentAmount > 0){
+                double playerBalance = Os_Druks_Rp_P.getEconomy().getBalance(player);
+                if (playerBalance >= currentAmount) {
+                    Os_Druks_Rp_P.getEconomy().withdrawPlayer(player.getName(), currentAmount);
+                    Player selectedPlayer = inventoryPlayer.getSelectedPlayer();
+                    Os_Druks_Rp_P.getEconomy().depositPlayer(selectedPlayer, currentAmount);
+
+                    player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&fEnviaste &4"+(int)currentAmount+"$ &fa&d"+selectedPlayer.getName()));
+                    selectedPlayer.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+" &d "+player.getName()+"&f te envio &2"+(int)currentAmount+"$ " ));
+
+                } else {
+                    player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&4 No tienes dinero suficiente en el banco"));
+                }
+            }
+
         }
     }
 }

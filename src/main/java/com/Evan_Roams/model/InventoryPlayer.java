@@ -2,11 +2,15 @@ package com.Evan_Roams.model;
 
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class InventoryPlayer {
 
     private Player player;
     private InventorySection section;
     private Player selectedPlayer; // Agrega este campo para almacenar al jugador seleccionado para multar
+    private double storedAmount; // Campo para almacenar la cantidad de dinero
 
 
     public InventoryPlayer(Player player) {
@@ -36,4 +40,13 @@ public class InventoryPlayer {
     public void setSelectedPlayer(Player selectedPlayer) {
         this.selectedPlayer = selectedPlayer;
     }
+
+    public double getStoredAmount() {
+        return storedAmount;
+    }
+
+    public void setStoredAmount(double storedAmount) {
+        this.storedAmount = storedAmount;
+    }
+
 }

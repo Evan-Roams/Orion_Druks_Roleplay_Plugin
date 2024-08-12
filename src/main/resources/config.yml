@@ -1,4 +1,10 @@
 # config.yml
 
 # Aquí puedes agregar configuraciones predeterminadas
-default-fine: 50
+
+# Configuración de pagos automáticos para policías
+payments:
+  interval: 1800 # Tiempo en segundos (30 minutos)
+
+  police:
+    amount:100

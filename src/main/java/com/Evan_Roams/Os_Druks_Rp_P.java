@@ -36,6 +36,7 @@ public class Os_Druks_Rp_P extends JavaPlugin {
     public void onEnable() {
 
         // Crear carpeta del plugin
+        createConfig();
         bankManager = new BankManager(this);
         dataManager = new DataManager(this);
 
@@ -52,11 +53,11 @@ public class Os_Druks_Rp_P extends JavaPlugin {
         //Guardar instancia Plugin
         instance = this;
 
-        //
+        //Registrar Manager
         tabletInventoryManager = new TabletInventoryManager();
 
         // Programar la tarea de pago automático
-        new PaymentPoliceTask(this).runTaskTimer(this, 0L, 20L * 60L /* * 30L */); // Ejecutar cada 30 minutos
+        loadAndSchedulePaymentTasks();
 
 
 
@@ -80,6 +81,13 @@ public class Os_Druks_Rp_P extends JavaPlugin {
         // Limpiar la instancia del plugin
         instance = null;
 
+    }
+
+    private void createConfig() {
+        File configFile = new File(getDataFolder(), "config.yml");
+        if (!configFile.exists()) {
+            saveDefaultConfig(); // Esto guarda el config.yml con valores predeterminados desde resources
+        }
     }
 
     private void setupEconomy() {
@@ -118,4 +126,15 @@ public class Os_Druks_Rp_P extends JavaPlugin {
     public TabletInventoryManager getTabletInventoryManager() {
         return tabletInventoryManager;
     }
+
+    private void loadAndSchedulePaymentTasks() {
+
+        long interval = getConfig().getLong("payments.interval", 1800L); // En segundos
+
+        double paymentPoliceAmount = getConfig().getDouble("payments.police.amount", 100.0);
+
+        // Programar la tarea de pago automático
+        new PaymentPoliceTask(this, paymentPoliceAmount).runTaskTimer(this, 0L, interval * 20L); // Convertir a ticks
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.Evan_Roams.tasks;
 
 import com.Evan_Roams.Os_Druks_Rp_P;
+import com.Evan_Roams.utils.MessageUtils;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
@@ -11,10 +12,11 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class PaymentPoliceTask extends BukkitRunnable {
 
     private final Os_Druks_Rp_P plugin;
-    private final double paymentAmount = 100.0; // Monto a pagar a cada jugador en servicio
+    private final double paymentAmount;
 
-    public PaymentPoliceTask(Os_Druks_Rp_P plugin) {
+    public PaymentPoliceTask(Os_Druks_Rp_P plugin, double paymentAmount) {
         this.plugin = plugin;
+        this.paymentAmount = paymentAmount;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class PaymentPoliceTask extends BukkitRunnable {
             if (user != null && user.getCachedData().getPermissionData().checkPermission("policia.servicio").asBoolean()) {
                 // Pagamos al jugador
                 Bukkit.getScheduler().runTask(plugin, () -> {
-                    onlinePlayer.sendMessage("¡Has recibido " + paymentAmount + " por estar en servicio!");
+                    onlinePlayer.sendMessage(MessageUtils.getColoredMessage("&fHas recibido &a$"+ (int)paymentAmount + " &fpor estar en servicio!"));
                     if (plugin.getEconomy() != null) {
                         plugin.getEconomy().depositPlayer(onlinePlayer, paymentAmount);
                     } else {

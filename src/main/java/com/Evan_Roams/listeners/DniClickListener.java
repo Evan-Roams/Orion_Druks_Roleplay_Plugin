@@ -1,7 +1,7 @@
 package com.Evan_Roams.listeners;
 
 import com.Evan_Roams.Os_Druks_Rp_P;
-import com.Evan_Roams.utils.ItemUtils;
+import com.Evan_Roams.model.InventoryPlayer;
 import com.Evan_Roams.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -51,7 +53,7 @@ public class DniClickListener implements Listener {
                             // Crear y abrir el inventario
                             Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Información DNI - "+ playerName);
 
-                            //relleno
+                            // Relleno
                             item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5);
                             meta = item.getItemMeta();
                             meta.setDisplayName("  ");
@@ -65,67 +67,54 @@ public class DniClickListener implements Listener {
                             FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerFile);
 
                             File valorMultasFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "multas/ValorMultas.yml");
-                            FileConfiguration ValorMultasConfig = YamlConfiguration.loadConfiguration(valorMultasFile);
+                            FileConfiguration valorMultasConfig = YamlConfiguration.loadConfiguration(valorMultasFile);
 
-                            int CantidadMultas = 0;
-                            int ValorMultas = 0;
+                            int cantidadMultas = 0;
+                            int valorMultas = 0;
 
                             int currentFines = playerDniConfig.getInt("Multas_Por_Pagar", 0);
                             for (int i = 0; i < 2; i++) {
                                 for (int j = 0; j < 9; j++) {
-                                    CantidadMultas = CantidadMultas + playerConfig.getInt(i+"_"+j, 0);
-                                    ValorMultas = ValorMultas + (playerConfig.getInt(i+"_"+j, 0) * ValorMultasConfig.getInt(i+"_"+j, 0) ) ;
-
+                                    cantidadMultas += playerConfig.getInt(i + "_" + j, 0);
+                                    valorMultas += (playerConfig.getInt(i + "_" + j, 0) * valorMultasConfig.getInt(i + "_" + j, 0));
                                 }
                             }
 
-
-
-                            //Nombre Usuario
+                            // Nombre Usuario
                             item = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
                             meta = item.getItemMeta();
-                            String playerDniName = playerDniConfig.getString("Nombre", "Nombre no encontrado"); // Valor predeterminado si "Nombre" no existe
-                            meta.setDisplayName(MessageUtils.getColoredMessage("&2Nombre: "+playerDniConfig.getString("Nombre", playerDniName)));
+                            String playerDniName = playerDniConfig.getString("Nombre", "Nombre no encontrado");
+                            meta.setDisplayName(MessageUtils.getColoredMessage("&2Nombre: " + playerDniConfig.getString("Nombre", playerDniName)));
                             lore = new ArrayList<>();
-                            String enBusqueda;
-
-                            if (playerDniConfig.getBoolean("Se_Busca", false)){
-                                enBusqueda = "Si";
-                            } else {
-                                enBusqueda = "No";
-                            }
+                            String enBusqueda = playerDniConfig.getBoolean("Se_Busca", false) ? "Si" : "No";
                             lore.add(MessageUtils.getColoredMessage("&7¿En Busqueda y Captura?: " + enBusqueda));
                             meta.setLore(lore);
                             item.setItemMeta(meta);
                             inventory.setItem(10, item);
 
-                            //Multas Usuario
+                            // Multas Usuario
                             item = new ItemStack(Material.PAPER);
                             meta = item.getItemMeta();
                             meta.setDisplayName(MessageUtils.getColoredMessage("&2Multas Usuario"));
                             lore = new ArrayList<>();
-                            lore.add(MessageUtils.getColoredMessage("&7Multas pendientes: " + CantidadMultas));
-                            lore.add(MessageUtils.getColoredMessage("&7Valor En Multas Pendientes: $" + ValorMultas));
+                            lore.add(MessageUtils.getColoredMessage("&7Multas pendientes: " + cantidadMultas));
+                            lore.add(MessageUtils.getColoredMessage("&7Valor En Multas Pendientes: $" + valorMultas));
                             meta.setLore(lore);
                             item.setItemMeta(meta);
                             inventory.setItem(11, item);
 
-                            playerDniConfig.set("Multas_Por_Pagar", CantidadMultas);
-                            playerDniConfig.set("Valor_en_multas", ValorMultas);
-
+                            playerDniConfig.set("Multas_Por_Pagar", cantidadMultas);
+                            playerDniConfig.set("Valor_en_multas", valorMultas);
 
                             // Guardar los cambios en los archivo YAML
                             try {
-                                // Guardar los cambios en los archivo YAML
                                 playerDniConfig.save(playerDniFile);
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 player.sendMessage(MessageUtils.getColoredMessage("&cError al guardar el DNI."));
                             }
 
-
                             player.openInventory(inventory);
-
                         }
                     }
                 }
@@ -133,14 +122,18 @@ public class DniClickListener implements Listener {
         }
     }
 
-    private ItemStack createItem(Material material, String name, String value) {
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.YELLOW + name);
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + value);
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        return item;
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (event.getClickedInventory() != null && event.getClickedInventory().getTitle().startsWith(ChatColor.GREEN + "Información DNI")) {
+            // Cancela todas las interacciones en el inventario del DNI
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+        // Puedes realizar alguna acción adicional si es necesario
     }
 }
