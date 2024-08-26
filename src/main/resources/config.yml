@@ -8,3 +8,9 @@ payments:
 
   police:
     amount:100
+
+multas:
+  comision_policia: 0.5
+
+loteria:
+  loteria_base_precio: 0

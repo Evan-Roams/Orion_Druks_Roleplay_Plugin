@@ -1,16 +1,16 @@
 package com.Evan_Roams;
 
-import com.Evan_Roams.commands.DniCommand;
-import com.Evan_Roams.commands.MainCommand;
-import com.Evan_Roams.commands.PoliciaCommand;
-import com.Evan_Roams.commands.TabletCommand;
+import com.Evan_Roams.commands.*;
 import com.Evan_Roams.listeners.DniClickListener;
 import com.Evan_Roams.listeners.InventoryListener;
+import com.Evan_Roams.listeners.LicenciasClickListener;
 import com.Evan_Roams.listeners.PlayerEventListener;
 import com.Evan_Roams.managers.BankManager;
 import com.Evan_Roams.managers.DataManager;
 import com.Evan_Roams.managers.TabletInventoryManager;
+import com.Evan_Roams.tasks.LoteriaTask;
 import com.Evan_Roams.tasks.PaymentPoliceTask;
+import com.Evan_Roams.utils.StringUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,6 +28,8 @@ public class Os_Druks_Rp_P extends JavaPlugin {
     private DataManager dataManager;
     private static Os_Druks_Rp_P instance; // Instancia estática
 
+    StringUtils stringUtils;
+
     private TabletInventoryManager tabletInventoryManager;
 
 
@@ -39,7 +41,6 @@ public class Os_Druks_Rp_P extends JavaPlugin {
         createConfig();
         bankManager = new BankManager(this);
         dataManager = new DataManager(this);
-
 
         //Registra Comandos
         registerCommands();
@@ -110,12 +111,15 @@ public class Os_Druks_Rp_P extends JavaPlugin {
         this.getCommand("tablet").setExecutor(new TabletCommand(this));
         this.getCommand("dni").setExecutor(new DniCommand(this));
         this.getCommand("policia").setExecutor(new PoliciaCommand(this));
+        this.getCommand("radio").setExecutor(new RadioCommand(this));
+        this.getCommand("rpadmin").setExecutor(new RpadminCommand(this));
 
     }
 
     public void registerEvents() {
         getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
         getServer().getPluginManager().registerEvents(new DniClickListener(this), this);
+        getServer().getPluginManager().registerEvents(new LicenciasClickListener(this), this);
 
     }
 
@@ -135,6 +139,13 @@ public class Os_Druks_Rp_P extends JavaPlugin {
 
         // Programar la tarea de pago automático
         new PaymentPoliceTask(this, paymentPoliceAmount).runTaskTimer(this, 0L, interval * 20L); // Convertir a ticks
+    }
+
+    private void loteriaTask(){
+        long interval = 3600L; //una hora en segundos
+
+        
+
     }
 
 }

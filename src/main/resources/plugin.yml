@@ -6,6 +6,10 @@ api-version: 1.12
 depend: [Vault, Essentials]
 
 permissions:
+
+  os_druks_rp_p.admin:
+    description: Permiso para usar el el multar
+    default: false
   os_druks_rp_p.commands.tablet:
     description: Permiso para usar el comando /roleplay tablet
     default: false
@@ -22,6 +26,10 @@ permissions:
     description: Permiso para estar en servicio de policía
     default: false
 
+  os_druks_rp_p.policia.radio:
+    description: Permiso para estar en la radio de policia
+    default: false
+
 
 
 commands:
@@ -29,6 +37,12 @@ commands:
     description: Comando Principal
     aliases:
       - mp
+
+  rpadmin:
+    description: Comando para radio depolicía
+    aliases:
+      - 911
+
   tablet:
     description: Comando para abrir tablet
     aliases:
@@ -39,6 +53,10 @@ commands:
       - cedula
   policia:
     description: Comando para policía
+    aliases:
+      - 911
+  radio:
+    description: Comando para radio depolicía
     aliases:
       - 911
 

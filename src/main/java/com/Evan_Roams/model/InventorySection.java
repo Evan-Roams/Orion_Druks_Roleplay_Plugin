@@ -8,8 +8,6 @@ public enum InventorySection {
 
     MENU_DNI,
 
-    MENU_LICENCIAS,
-
     MENU_MISMULTAS,
 
     MENU_MULTAR,

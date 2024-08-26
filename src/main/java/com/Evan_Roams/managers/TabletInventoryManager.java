@@ -4,9 +4,8 @@ import com.Evan_Roams.Os_Druks_Rp_P;
 import com.Evan_Roams.model.InventoryPlayer;
 import com.Evan_Roams.model.InventorySection;
 import com.Evan_Roams.utils.MessageUtils;
-import net.milkbowl.vault.economy.Economy;
+import com.Evan_Roams.utils.TabletInventoryClickManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,9 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.Evan_Roams.utils.StringUtils.getDisplayNameForKey;
+
 public class TabletInventoryManager {
 
-    private ArrayList<InventoryPlayer> players;
+    private static ArrayList<InventoryPlayer> players;
 
     //Integrando el banco
     BankManager bankManager;
@@ -45,7 +46,7 @@ public class TabletInventoryManager {
         players.removeIf(inventoryPlayer -> inventoryPlayer.getPlayer().equals(player));
     }
 
-    public void openMainInventory(InventoryPlayer inventoryPlayer) {
+    public static void openMainInventory(InventoryPlayer inventoryPlayer) {
 
         inventoryPlayer.setSection(InventorySection.MENU_MAIN);
         Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET"));
@@ -83,11 +84,12 @@ public class TabletInventoryManager {
         inv.setItem(11, item);
 
 
+
         player.openInventory(inv);
         players.add(inventoryPlayer);
     }
 
-    public void openLegalidadInventory(InventoryPlayer inventoryPlayer) {
+    public static void openLegalidadInventory(InventoryPlayer inventoryPlayer) {
 
         inventoryPlayer.setSection(InventorySection.MENU_LEGALIDAD);
         Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - LEGALIDAD"));
@@ -133,12 +135,24 @@ public class TabletInventoryManager {
         item.setItemMeta(meta);
         inv.setItem(19, item);
 
-        //Licencias
+        /// Licencias Usuario
+
+        String playerName = player.getName();
+        File playerDniFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "dni/" + playerName + ".yml");
+        FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerDniFile);
+
         item = new ItemStack(Material.PAPER);
         meta = item.getItemMeta();
-        meta.setDisplayName(MessageUtils.getColoredMessage("&4LICENCIAS"));
+        meta.setDisplayName(MessageUtils.getColoredMessage("&2Licencias Usuario"));
         lore = new ArrayList<>();
-        lore.add(MessageUtils.getColoredMessage("&7Licencias del Usuario"));
+        lore.add(MessageUtils.getColoredMessage("&7Licencia de Conducir: " + playerConfig.getBoolean("Licencia_Conducir", false)));
+        lore.add(MessageUtils.getColoredMessage("&7Licencia de Aviación: " + playerConfig.getBoolean("Licencia_Aviación", false)));
+        lore.add(MessageUtils.getColoredMessage("&7Licencia de Pistola: " + playerConfig.getBoolean("Licencia_Pistola", false)));
+        lore.add(MessageUtils.getColoredMessage("&7Licencia de Escopeta: " + playerConfig.getBoolean("Licencia_Escopeta", false)));
+        lore.add(MessageUtils.getColoredMessage("&7Licencia de SMG: " + playerConfig.getBoolean("Licencia_SMG", false)));
+        lore.add(MessageUtils.getColoredMessage("&7Licencia de AK: " + playerConfig.getBoolean("Licencia_AK", false)));
+        lore.add(MessageUtils.getColoredMessage("&7Licencia de Rifle: " + playerConfig.getBoolean("Licencia_Rifle", false)));
+        lore.add(MessageUtils.getColoredMessage("&7Licencia de Rifle Asalto: " + playerConfig.getBoolean("Licencia_Rifle_Asalto", false)));
         meta.setLore(lore);
         item.setItemMeta(meta);
         inv.setItem(20, item);
@@ -152,14 +166,14 @@ public class TabletInventoryManager {
         lore.add(MessageUtils.getColoredMessage("&f    'Multar' -> &5Click Derecho"));
         meta.setLore(lore);
         item.setItemMeta(meta);
-        inv.setItem(22, item);
+        inv.setItem(21, item);
 
 
         player.openInventory(inv);
         players.add(inventoryPlayer);
     }
 
-    public void openDniInventory(InventoryPlayer inventoryPlayer) {
+    public static void openDniInventory(InventoryPlayer inventoryPlayer) {
 
         inventoryPlayer.setSection(InventorySection.MENU_DNI);
         Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - DNI"));
@@ -256,37 +270,7 @@ public class TabletInventoryManager {
         players.add(inventoryPlayer);
     }
 
-    public void openLicenciasInventory(InventoryPlayer inventoryPlayer) {
-
-        inventoryPlayer.setSection(InventorySection.MENU_LICENCIAS);
-        Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - LICENCIAS"));
-        Player player = inventoryPlayer.getPlayer();
-
-        //relleno
-        ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("  ");
-        item.setItemMeta(meta);
-
-        for (int i = 0; i < 54; i++) {
-            inv.setItem(i, item);
-        }
-
-
-        //Atras
-        item = new ItemStack(Material.ARROW);
-        meta = item.getItemMeta();
-        meta.setDisplayName(MessageUtils.getColoredMessage("&7Atras"));
-        item.setItemMeta(meta);
-
-        inv.setItem(40, item);
-
-
-        player.openInventory(inv);
-        players.add(inventoryPlayer);
-    }
-
-    public void openMisMultasInventory(InventoryPlayer inventoryPlayer) {
+    public static void openMisMultasInventory(InventoryPlayer inventoryPlayer) {
 
         inventoryPlayer.setSection(InventorySection.MENU_MISMULTAS);
         Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - MIS MULTAS"));
@@ -333,7 +317,7 @@ public class TabletInventoryManager {
         players.add(inventoryPlayer);
     }
 
-    private void addFineItem(Inventory inv, String key, int multaAmmount, FileConfiguration playerConfig) {
+    private static void addFineItem(Inventory inv, String key, int multaAmmount, FileConfiguration playerConfig) {
         // Cargar el archivo ValorMultas.yml
         File valorMultasFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "multas/ValorMultas.yml");
         FileConfiguration valorMultasConfig = YamlConfiguration.loadConfiguration(valorMultasFile);
@@ -341,7 +325,7 @@ public class TabletInventoryManager {
 
         ItemStack fineItem = new ItemStack(Material.PAPER);
         ItemMeta fineMeta = fineItem.getItemMeta();
-        String displayName = MessageUtils.getColoredMessage("&4"+getDisplayNameForKey(key));
+        String displayName = MessageUtils.getColoredMessage("&4"+ getDisplayNameForKey(key));
         fineMeta.setDisplayName(MessageUtils.getColoredMessage(displayName));
         List<String> lore = new ArrayList<>();
         lore.add(MessageUtils.getColoredMessage("&4 Valor Multa: $+"+multaValue));
@@ -362,56 +346,7 @@ public class TabletInventoryManager {
         }
     }
 
-    private String getDisplayNameForKey(String key) {
-        switch (key) {
-            case "0_0":
-                return "0.0 - Falta Licencia de Auto";
-            case "0_1":
-                return "0.1 - Exceso de Velocidad";
-            case "0_2":
-                return "0.2 - Mal Estacionado";
-            case "0_3":
-                return "0.3 - Conducción Temerararia";
-            case "0_4":
-                return "0.4 - Luz Roja";
-            case "0_5":
-                return "0.5 - Sin Seguro";
-            case "0_6":
-                return "0.6 - Sin Placa";
-            case "0_7":
-                return "0.7 - Ruidos Excesivos";
-            case "0_8":
-                return "0.8 - Uso del Teléfono";
-            case "0_9":
-                return "0.9 - Otros";
-            case "1_0":
-                return "1.0 - Falta Licencia de Conducir";
-            case "1_1":
-                return "1.1 - Exceso de Alcohol";
-            case "1_2":
-                return "1.2 - Pasarse el Semáforo en Rojo";
-            case "1_3":
-                return "1.3 - Exceso de Carga";
-            case "1_4":
-                return "1.4 - Falta de Equipamiento";
-            case "1_5":
-                return "1.5 - Inspección Técnica";
-            case "1_6":
-                return "1.6 - Conducir sin Licencia";
-            case "1_7":
-                return "1.7 - Manipulación del Vehículo";
-            case "1_8":
-                return "1.8 - Sin Documentación";
-            case "1_9":
-                return "1.9 - Circulación en Área Restringida";
-            case "2_0":
-                return "2.0 - Conducir sin Seguro";
-            default:
-                return key;
-        }
-    }
-
-    public void openMultarInventory(InventoryPlayer inventoryPlayer) {
+    public static void openMultarInventory(InventoryPlayer inventoryPlayer) {
 
         inventoryPlayer.setSection(InventorySection.MENU_MULTAR);
         Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - MULTAR"));
@@ -455,7 +390,7 @@ public class TabletInventoryManager {
         players.add(inventoryPlayer);
     }
 
-    public void openSeleccionarMulta(InventoryPlayer inventoryPlayer) {
+    public static void openSeleccionarMulta(InventoryPlayer inventoryPlayer) {
         inventoryPlayer.setSection(InventorySection.MENU_SELECCIONAR_MULTA);
         Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - SELECCIONAR MULTA"));
         Player player = inventoryPlayer.getPlayer();
@@ -500,7 +435,7 @@ public class TabletInventoryManager {
         players.add(inventoryPlayer);
     }
 
-    public void openFinanzasInventory(InventoryPlayer inventoryPlayer) {
+    public static void openFinanzasInventory(InventoryPlayer inventoryPlayer) {
         inventoryPlayer.setSection(InventorySection.MENU_FINANZAS);
         Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - FINANZAS"));
         Player player = inventoryPlayer.getPlayer();
@@ -547,7 +482,7 @@ public class TabletInventoryManager {
         inv.setItem(25, item);
     }
 
-    public void openEnviarDineroInventory(InventoryPlayer inventoryPlayer) {
+    public static void openEnviarDineroInventory(InventoryPlayer inventoryPlayer) {
         inventoryPlayer.setSection(InventorySection.MENU_ENVIAR_DINERO);
         Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - ENVIAR DINERO"));
         Player player = inventoryPlayer.getPlayer();
@@ -633,7 +568,7 @@ public class TabletInventoryManager {
         players.add(inventoryPlayer);
     }
 
-    public void openEnviarDineroSeleccionarInventory(InventoryPlayer inventoryPlayer) {
+    public static void openEnviarDineroSeleccionarInventory(InventoryPlayer inventoryPlayer) {
 
         inventoryPlayer.setSection(InventorySection.MENU_ENVIAR_DINERO_SELECCIONAR);
         Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4TABLET - ENVIAR DINERO"));
@@ -649,17 +584,15 @@ public class TabletInventoryManager {
             inv.setItem(i, item);
         }
 
-
         //Atras
         item = new ItemStack(Material.ARROW);
         meta = item.getItemMeta();
         meta.setDisplayName(MessageUtils.getColoredMessage("&7Atras"));
         item.setItemMeta(meta);
-
         inv.setItem(52, item);
 
         // Lista de jugadores en línea
-        int slot = 0; // Empezar en el slot 10 y avanzar desde ahí
+        int slot = 0;
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             ItemStack playerItem = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
             ItemMeta playerMeta = playerItem.getItemMeta();
@@ -668,8 +601,8 @@ public class TabletInventoryManager {
             inv.setItem(slot, playerItem);
             slot++;
 
-            // Evitar sobrecargar el inventario
-            if (slot > 51) break; // Limitar el número de jugadores mostrados en el inventario
+            // no sobrecarga
+            if (slot > 51) break; 
         }
 
 
@@ -679,240 +612,6 @@ public class TabletInventoryManager {
 
     public void inventoryClick(InventoryPlayer inventoryPlayer, int slot, ClickType clickType) {
 
-        Player player = inventoryPlayer.getPlayer();
-        InventorySection section = inventoryPlayer.getSection();
-
-        // Cargar el archivo ValorMultas.yml
-        File valorMultasFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "multas/ValorMultas.yml");
-        FileConfiguration valorMultasConfig = YamlConfiguration.loadConfiguration(valorMultasFile);
-
-        if (section.equals(InventorySection.MENU_MAIN)) {
-            if (slot == 10) {
-                openLegalidadInventory(inventoryPlayer);
-            } else if (slot == 11) {
-                openFinanzasInventory(inventoryPlayer);
-            }
-
-
-        } else if (section.equals(InventorySection.MENU_LEGALIDAD)) {
-            if (slot == 19) {
-                openDniInventory(inventoryPlayer);
-            } else if(slot == 20) {
-                openLicenciasInventory(inventoryPlayer);
-            } else if (slot == 22 && clickType == ClickType.LEFT) {
-                openMisMultasInventory(inventoryPlayer);
-            } else if (slot == 22 && clickType == ClickType.RIGHT) {
-                if (!player.hasPermission("os_druks_rp_p.policia.multar")){
-                    player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&fNo tienes permisos para este comando"));
-
-                } else {
-                    openMultarInventory(inventoryPlayer);
-                }
-            } else if (slot == 40) {
-                openMainInventory(inventoryPlayer);
-            }
-
-
-        } else if (section.equals(InventorySection.MENU_DNI)) {
-            if (slot == 52) {
-                openMainInventory(inventoryPlayer);
-            } else if (slot == 40){
-                openLegalidadInventory(inventoryPlayer);
-            }
-
-
-        } else if (section.equals(InventorySection.MENU_LICENCIAS)) {
-            if (slot == 40) {
-                openMainInventory(inventoryPlayer);
-            }
-
-
-        } else if (section.equals(InventorySection.MENU_MISMULTAS)) {
-            if (slot == 52) {
-                openMainInventory(inventoryPlayer);
-            } else if (clickType == ClickType.RIGHT) {
-                // Pago de multa
-                ItemStack clickedItem = player.getOpenInventory().getTopInventory().getItem(slot);
-                if (clickedItem != null && clickedItem.getType() == Material.PAPER) {
-                    String itemName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
-                    String multaKey = itemName.substring(0,3).replace('.', '_');
-
-                    // Obtener el valor de la multa desde ValorMultas.yml
-                    int multaValue = valorMultasConfig.getInt(multaKey, 0);
-
-                    // Archivo YAML del jugador
-                    File playerFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "multas/" + player.getName() + ".yml");
-                    FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerFile);
-
-                    // Obtener la cantidad de multas del jugador
-                    int multaAmount = playerConfig.getInt(multaKey, 0);
-
-                    if (multaAmount > 0) {
-                        if (multaValue > 0) {
-                            // Verificar si el jugador tiene suficiente dinero
-                            double playerBalance = Os_Druks_Rp_P.getEconomy().getBalance(player);
-                            if (playerBalance >= multaValue) {
-                                // Deducir la multa del balance del jugador
-                                Os_Druks_Rp_P.getEconomy().withdrawPlayer(player, multaValue);
-
-
-
-
-                                // Actualizar el archivo YAML del jugador
-                                playerConfig.set(multaKey, multaAmount - 1);
-                                try {
-                                    playerConfig.save(playerFile);
-                                    player.sendMessage(MessageUtils.getColoredMessage("&aHas pagado la multa '" + multaKey + "' por $" + multaValue + "."));
-                                    bankManager.addToBalance(multaValue); //se añade dinero al bancocomo si se hubeira desviado
-                                    openMisMultasInventory(inventoryPlayer); // Reabrir el inventario para reflejar los cambios
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                    player.sendMessage(MessageUtils.getColoredMessage("&cError al guardar el pago de la multa."));
-                                }
-                            } else {
-                                player.sendMessage(MessageUtils.getColoredMessage("&cNo tienes "+ multaValue +"$ para pagar esta multa, añade dinero a tu cuenta bancaria"));
-                            }
-                        } else {
-                            player.sendMessage(MessageUtils.getColoredMessage("&cLa multa de este tipo tiene un valor de 0."));
-                        }
-                    } else {
-                        player.sendMessage(MessageUtils.getColoredMessage("&cNo tienes multas de este tipo para pagar."));
-                    }
-                }
-            }
-
-
-        } else if (section.equals(InventorySection.MENU_MULTAR)) {
-            if (slot == 52) {
-                openMainInventory(inventoryPlayer);
-            } else {
-                // Seleccionar jugador
-                ItemStack clickedItem = player.getOpenInventory().getTopInventory().getItem(slot);
-                if (clickedItem != null && clickedItem.getType() == Material.SKULL_ITEM) {
-                    String playerName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
-                    Player targetPlayer = Bukkit.getPlayer(playerName);
-
-                    if (targetPlayer != null) {
-                        inventoryPlayer.setSelectedPlayer(targetPlayer); // Guardar jugador seleccionado
-                        openSeleccionarMulta(inventoryPlayer); // Abrir inventario de selección de multa
-                    }
-                }
-            }
-
-
-        } else if (section.equals(InventorySection.MENU_SELECCIONAR_MULTA)) {
-            if (slot == 52) {
-                openMultarInventory(inventoryPlayer);
-            } else if (slot >= 0 && slot <= 9) {
-                // Obtener el nombre del jugador seleccionado
-                Player selectedPlayer = inventoryPlayer.getSelectedPlayer();
-                if (selectedPlayer != null) {
-                    String selectedPlayerName = selectedPlayer.getName();
-
-                    // Archivo YAML de multas para el jugador
-                    File playerFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "multas/" + selectedPlayerName + ".yml");
-                    FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerFile);
-
-                    // Leer el valor actual de la multa basada en el slot
-                    String multaKey = "0_" + slot;
-                    int currentFine = playerConfig.getInt(multaKey, 0);
-
-                    // Incrementar el valor de la multa tanto en el archivo de multas como en el registro dni
-                    playerConfig.set(multaKey, currentFine + 1);
-
-
-
-
-                    try {
-                        // Guardar los cambios en los archivo YAML
-                        playerConfig.save(playerFile);
-                        player.sendMessage(MessageUtils.getColoredMessage("&F Se ha multado con &4"+getDisplayNameForKey(multaKey)+" &f a &d "+selectedPlayerName));
-                        selectedPlayer.sendMessage(MessageUtils.getColoredMessage("&2"+player.getName()+"&fTe ha multado con &4"+getDisplayNameForKey(multaKey)));
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        player.sendMessage(MessageUtils.getColoredMessage("&cError al guardar la multa."));
-                    }
-                } else {
-                    player.sendMessage(MessageUtils.getColoredMessage("&cNo se ha seleccionado un jugador."));
-                }
-            }
-        } else if (section.equals(InventorySection.MENU_FINANZAS)) {
-            if (slot == 23) {
-                openEnviarDineroSeleccionarInventory(inventoryPlayer);
-            } else if (slot == 19) {
-                openMainInventory(inventoryPlayer);
-            }
-
-
-        } else if (section.equals(InventorySection.MENU_ENVIAR_DINERO_SELECCIONAR)) {
-            if (slot == 52) {
-                openEnviarDineroInventory(inventoryPlayer);
-            } else {
-                // Seleccionar jugador
-                ItemStack clickedItem = player.getOpenInventory().getTopInventory().getItem(slot);
-                if (clickedItem != null && clickedItem.getType() == Material.SKULL_ITEM) {
-                    String playerName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
-                    Player targetPlayer = Bukkit.getPlayer(playerName);
-
-                    if (targetPlayer != null) {
-                        inventoryPlayer.setSelectedPlayer(targetPlayer); // Guardar jugador seleccionado
-                        openEnviarDineroInventory(inventoryPlayer); // Abrir inventario de selección de dinero a enviar
-                    }
-                }
-            }
-        } else if (section.equals(InventorySection.MENU_ENVIAR_DINERO)) {
-            double currentAmount = inventoryPlayer.getStoredAmount();
-            if (clickType == ClickType.LEFT) {
-
-
-                switch (slot) {
-                    case 11: // -1000
-                        inventoryPlayer.setStoredAmount(currentAmount - 1000);
-                        break;
-                    case 12: // -100
-                        inventoryPlayer.setStoredAmount(currentAmount - 100);
-                        break;
-                    case 13: // -10
-                        inventoryPlayer.setStoredAmount(currentAmount - 10);
-                        break;
-                    case 14: // -1
-                        inventoryPlayer.setStoredAmount(currentAmount - 1);
-                        break;
-                    case 40: // +1
-                        inventoryPlayer.setStoredAmount(currentAmount + 1);
-                        break;
-                    case 41: // +10
-                        inventoryPlayer.setStoredAmount(currentAmount + 10);
-                        break;
-                    case 42: // +100
-                        inventoryPlayer.setStoredAmount(currentAmount + 100);
-                        break;
-                    case 43: // +1000
-                        inventoryPlayer.setStoredAmount(currentAmount + 1000);
-                        break;
-                    case 19: // Atras
-                        openMainInventory(inventoryPlayer);
-                        return;
-                }
-
-                // Actualizar la cantidad en el inventario
-                openEnviarDineroInventory(inventoryPlayer);
-            } else if (slot == 22 && clickType == ClickType.RIGHT && currentAmount > 0){
-                double playerBalance = Os_Druks_Rp_P.getEconomy().getBalance(player);
-                if (playerBalance >= currentAmount) {
-                    Os_Druks_Rp_P.getEconomy().withdrawPlayer(player.getName(), currentAmount);
-                    Player selectedPlayer = inventoryPlayer.getSelectedPlayer();
-                    Os_Druks_Rp_P.getEconomy().depositPlayer(selectedPlayer, currentAmount);
-
-                    player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&fEnviaste &4"+(int)currentAmount+"$ &fa&d"+selectedPlayer.getName()));
-                    selectedPlayer.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+" &d "+player.getName()+"&f te envio &2"+(int)currentAmount+"$ " ));
-
-                } else {
-                    player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&4 No tienes dinero suficiente en el banco"));
-                }
-            }
-
-        }
+        TabletInventoryClickManager.inventoryClick(inventoryPlayer, slot, clickType);
     }
 }

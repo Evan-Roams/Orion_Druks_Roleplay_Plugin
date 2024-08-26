@@ -55,9 +55,6 @@ public class DniCommand implements CommandExecutor {
 
                 help(sender);
                 
-            } else if (args[0].equalsIgnoreCase("dinero")){
-                showBalance(player);
-
             } else {
                 help(sender);
             }

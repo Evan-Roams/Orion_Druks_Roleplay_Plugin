@@ -72,6 +72,16 @@ public class DniClickListener implements Listener {
                             int cantidadMultas = 0;
                             int valorMultas = 0;
 
+                            boolean licenciaAutomovilistica = playerConfig.getBoolean("Licencia_Conducir", false);
+                            boolean licenciaAerea = playerConfig.getBoolean("Licencia_Aviación", false);
+                            boolean licenciaPistola = playerConfig.getBoolean("Licencia_Pistola", false);
+                            boolean licenciaEscopeta = playerConfig.getBoolean("Licencia_Escopeta", false);
+                            boolean licenciaSMG = playerConfig.getBoolean("Licencia_SMG", false);
+                            boolean licenciaAK = playerConfig.getBoolean("Licencia_AK", false);
+                            boolean licenciaRifle = playerConfig.getBoolean("Licencia_Rifle", false);
+                            boolean licenciaRifleAsalto = playerConfig.getBoolean("Licencia_Rifle_Asalto", false);
+
+
                             int currentFines = playerDniConfig.getInt("Multas_Por_Pagar", 0);
                             for (int i = 0; i < 2; i++) {
                                 for (int j = 0; j < 9; j++) {
@@ -102,6 +112,23 @@ public class DniClickListener implements Listener {
                             meta.setLore(lore);
                             item.setItemMeta(meta);
                             inventory.setItem(11, item);
+
+                            // Licencias Usuario
+                            item = new ItemStack(Material.PAPER);
+                            meta = item.getItemMeta();
+                            meta.setDisplayName(MessageUtils.getColoredMessage("&2Licencias Usuario"));
+                            lore = new ArrayList<>();
+                            lore.add(MessageUtils.getColoredMessage("&7Licencia de Conducir: " + licenciaAutomovilistica));
+                            lore.add(MessageUtils.getColoredMessage("&7Licencia de Aviacion: " + licenciaAerea));
+                            lore.add(MessageUtils.getColoredMessage("&7Licencia de Pistola: " + licenciaPistola));
+                            lore.add(MessageUtils.getColoredMessage("&7Licencia de Escopeta: " + licenciaEscopeta));
+                            lore.add(MessageUtils.getColoredMessage("&7Licencia de SMG: " + licenciaSMG));
+                            lore.add(MessageUtils.getColoredMessage("&7Licencia de AK: " + licenciaAK));
+                            lore.add(MessageUtils.getColoredMessage("&7Licencia de Rifle: " + licenciaRifle));
+                            lore.add(MessageUtils.getColoredMessage("&7Licencia de Rifle Asalto: " + licenciaRifleAsalto));
+                            meta.setLore(lore);
+                            item.setItemMeta(meta);
+                            inventory.setItem(12, item);
 
                             playerDniConfig.set("Multas_Por_Pagar", cantidadMultas);
                             playerDniConfig.set("Valor_en_multas", valorMultas);

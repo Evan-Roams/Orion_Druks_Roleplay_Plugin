@@ -21,7 +21,7 @@ public class PlayerEventListener implements Listener {
         YamlConfiguration playerDni = dataManager.getDniConfig(playerName);
 
 
-        // Aquí podrías realizar otras acciones si es necesario, como inicializar valores o cargar datos
+        // inicializar valores o cargar datos
         dataManager.savePlayerConfig(playerName, playerConfig);
         dataManager.saveDniConfig(playerName, playerDni);
     }
