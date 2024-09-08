@@ -43,6 +43,11 @@ commands:
     aliases:
       - 911
 
+  rptienda:
+    description: Comando para tienda
+    aliases:
+      - rptienda
+
   tablet:
     description: Comando para abrir tablet
     aliases:

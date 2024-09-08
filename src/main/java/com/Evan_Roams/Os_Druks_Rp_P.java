@@ -7,8 +7,7 @@ import com.Evan_Roams.listeners.LicenciasClickListener;
 import com.Evan_Roams.listeners.PlayerEventListener;
 import com.Evan_Roams.managers.BankManager;
 import com.Evan_Roams.managers.DataManager;
-import com.Evan_Roams.managers.TabletInventoryManager;
-import com.Evan_Roams.tasks.LoteriaTask;
+import com.Evan_Roams.managers.InventorysManager;
 import com.Evan_Roams.tasks.PaymentPoliceTask;
 import com.Evan_Roams.utils.StringUtils;
 import net.milkbowl.vault.economy.Economy;
@@ -30,7 +29,7 @@ public class Os_Druks_Rp_P extends JavaPlugin {
 
     StringUtils stringUtils;
 
-    private TabletInventoryManager tabletInventoryManager;
+    private InventorysManager inventorysManager;
 
 
 
@@ -49,13 +48,13 @@ public class Os_Druks_Rp_P extends JavaPlugin {
         registerEvents();
 
         // Registrar el listener
-        getServer().getPluginManager().registerEvents(new PlayerEventListener(dataManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerEventListener(dataManager, bankManager), this);
 
         //Guardar instancia Plugin
         instance = this;
 
         //Registrar Manager
-        tabletInventoryManager = new TabletInventoryManager();
+        inventorysManager = new InventorysManager();
 
         // Programar la tarea de pago automático
         loadAndSchedulePaymentTasks();
@@ -113,6 +112,7 @@ public class Os_Druks_Rp_P extends JavaPlugin {
         this.getCommand("policia").setExecutor(new PoliciaCommand(this));
         this.getCommand("radio").setExecutor(new RadioCommand(this));
         this.getCommand("rpadmin").setExecutor(new RpadminCommand(this));
+        this.getCommand("rptienda").setExecutor(new RptiendaCommand(this));
 
     }
 
@@ -127,8 +127,8 @@ public class Os_Druks_Rp_P extends JavaPlugin {
         return instance;
     }
 
-    public TabletInventoryManager getTabletInventoryManager() {
-        return tabletInventoryManager;
+    public InventorysManager getInventorysManager() {
+        return inventorysManager;
     }
 
     private void loadAndSchedulePaymentTasks() {

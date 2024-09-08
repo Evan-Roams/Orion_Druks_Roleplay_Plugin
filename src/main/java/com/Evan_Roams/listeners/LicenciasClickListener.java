@@ -1,20 +1,15 @@
 package com.Evan_Roams.listeners;
 
 import com.Evan_Roams.Os_Druks_Rp_P;
-import com.Evan_Roams.managers.TabletInventoryManager;
 import com.Evan_Roams.model.InventoryPlayer;
 import com.Evan_Roams.utils.MessageUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.data.type.Switch;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -62,7 +57,7 @@ public class LicenciasClickListener implements Listener {
                             try {
                                 playerConfig.save(playerFile);
                                 player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f Adquiriste una nueva Licencia"));
-                                plugin.getTabletInventoryManager().openLegalidadInventory(new InventoryPlayer(player));
+                                plugin.getInventorysManager().openLegalidadInventory(new InventoryPlayer(player));
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -83,7 +78,7 @@ public class LicenciasClickListener implements Listener {
                             try {
                                 playerConfig.save(playerFile);
                                 player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f Adquiriste una nueva Licencia"));
-                                plugin.getTabletInventoryManager().openLegalidadInventory(new InventoryPlayer(player));
+                                plugin.getInventorysManager().openLegalidadInventory(new InventoryPlayer(player));
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -104,7 +99,7 @@ public class LicenciasClickListener implements Listener {
                             try {
                                 playerConfig.save(playerFile);
                                 player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f Adquiriste una nueva Licencia"));
-                                plugin.getTabletInventoryManager().openLegalidadInventory(new InventoryPlayer(player));
+                                plugin.getInventorysManager().openLegalidadInventory(new InventoryPlayer(player));
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -125,7 +120,7 @@ public class LicenciasClickListener implements Listener {
                             try {
                                 playerConfig.save(playerFile);
                                 player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f Adquiriste una nueva Licencia"));
-                                plugin.getTabletInventoryManager().openLegalidadInventory(new InventoryPlayer(player));
+                                plugin.getInventorysManager().openLegalidadInventory(new InventoryPlayer(player));
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -146,7 +141,7 @@ public class LicenciasClickListener implements Listener {
                             try {
                                 playerConfig.save(playerFile);
                                 player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f Adquiriste una nueva Licencia"));
-                                plugin.getTabletInventoryManager().openLegalidadInventory(new InventoryPlayer(player));
+                                plugin.getInventorysManager().openLegalidadInventory(new InventoryPlayer(player));
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -167,7 +162,7 @@ public class LicenciasClickListener implements Listener {
                             try {
                                 playerConfig.save(playerFile);
                                 player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f Adquiriste una nueva Licencia"));
-                                plugin.getTabletInventoryManager().openLegalidadInventory(new InventoryPlayer(player));
+                                plugin.getInventorysManager().openLegalidadInventory(new InventoryPlayer(player));
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -188,7 +183,7 @@ public class LicenciasClickListener implements Listener {
                             try {
                                 playerConfig.save(playerFile);
                                 player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f Adquiriste una nueva Licencia"));
-                                plugin.getTabletInventoryManager().openLegalidadInventory(new InventoryPlayer(player));
+                                plugin.getInventorysManager().openLegalidadInventory(new InventoryPlayer(player));
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -209,7 +204,7 @@ public class LicenciasClickListener implements Listener {
                             try {
                                 playerConfig.save(playerFile);
                                 player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&f Adquiriste una nueva Licencia"));
-                                plugin.getTabletInventoryManager().openLegalidadInventory(new InventoryPlayer(player));
+                                plugin.getInventorysManager().openLegalidadInventory(new InventoryPlayer(player));
 
                             } catch (IOException e) {
                                 e.printStackTrace();

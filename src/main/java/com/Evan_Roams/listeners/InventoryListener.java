@@ -19,13 +19,13 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event){
         Player player = (Player) event.getWhoClicked();
-        InventoryPlayer inventoryPlayer =  plugin.getTabletInventoryManager().getInventoryPlayer(player);
+        InventoryPlayer inventoryPlayer =  plugin.getInventorysManager().getInventoryPlayer(player);
         if(inventoryPlayer != null){
             //significa que el jugador esta dentro de uno de lo inventarios
             event.setCancelled(true);
             //player.sendMessage("Cancelando click");
             if(event.getCurrentItem() != null && event.getClickedInventory().equals(player.getOpenInventory().getTopInventory())){
-                plugin.getTabletInventoryManager().inventoryClick(inventoryPlayer, event.getSlot(), event.getClick());
+                plugin.getInventorysManager().inventoryClick(inventoryPlayer, event.getSlot(), event.getClick());
             }
         }
     }
@@ -33,7 +33,11 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event){
         Player player = (Player)event.getPlayer();
-        plugin.getTabletInventoryManager().removePLayer(player);
+        InventoryPlayer inventoryPlayer =  plugin.getInventorysManager().getInventoryPlayer(player);
+
+        if(inventoryPlayer != null) {
+            plugin.getInventorysManager().removePLayer(player);
+        }
         //player.sendMessage("Saliendo Inventario");
 
     }

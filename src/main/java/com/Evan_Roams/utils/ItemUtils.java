@@ -4,6 +4,7 @@ import com.Evan_Roams.Os_Druks_Rp_P;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -168,6 +169,23 @@ public class ItemUtils {
         meta.setLore(lore);
         item.setItemMeta(meta);
 
+
+        return item;
+    }
+
+    public static ItemStack generateChequesItem(){
+
+        ItemStack item = new ItemStack(Material.KNOWLEDGE_BOOK);
+        item.setAmount(1);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(MessageUtils.getColoredMessage("&2Cheque de $1"));
+        meta.hasEnchants();
+        meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+        List<String> lore = new ArrayList<>();
+        lore.add(MessageUtils.getColoredMessage("Cheque"));
+        lore.add("1");
+        meta.setLore(lore);
+        item.setItemMeta(meta);
 
         return item;
     }

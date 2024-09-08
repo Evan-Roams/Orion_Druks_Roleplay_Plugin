@@ -20,7 +20,9 @@ public enum InventorySection {
 
     MENU_ENVIAR_DINERO_SELECCIONAR,
 
-    MENU_PRESTAMOS
+    MENU_PRESTAMOS,
+
+    MENU_TIENDAS_DOLARES
 
 
 }

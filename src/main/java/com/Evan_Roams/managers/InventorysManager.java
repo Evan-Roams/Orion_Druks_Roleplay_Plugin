@@ -4,7 +4,7 @@ import com.Evan_Roams.Os_Druks_Rp_P;
 import com.Evan_Roams.model.InventoryPlayer;
 import com.Evan_Roams.model.InventorySection;
 import com.Evan_Roams.utils.MessageUtils;
-import com.Evan_Roams.utils.TabletInventoryClickManager;
+import com.Evan_Roams.utils.InventoryClicksManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,14 +22,14 @@ import java.util.List;
 
 import static com.Evan_Roams.utils.StringUtils.getDisplayNameForKey;
 
-public class TabletInventoryManager {
+public class InventorysManager {
 
     private static ArrayList<InventoryPlayer> players;
 
     //Integrando el banco
     BankManager bankManager;
 
-    public TabletInventoryManager() {
+    public InventorysManager() {
         this.players = new ArrayList<>();
     }
 
@@ -120,7 +120,7 @@ public class TabletInventoryManager {
         meta.setDisplayName(MessageUtils.getColoredMessage("&2INFORMACION USUARIO"));
         List<String> lore = new ArrayList<>();
         lore.add(MessageUtils.getColoredMessage("&7Nombre: " + player.getName()));
-        lore.add(MessageUtils.getColoredMessage("&7Dinero: " + Os_Druks_Rp_P.getEconomy().getBalance(player)));
+        lore.add(MessageUtils.getColoredMessage("&7Dinero: " + EconomyManager.obtenerBalanceJugador(player)));
         meta.setLore(lore);
         item.setItemMeta(meta);
         inv.setItem(4, item);
@@ -610,8 +610,105 @@ public class TabletInventoryManager {
         players.add(inventoryPlayer);
     }
 
+    public static void openTiendaDolaresInventory(InventoryPlayer inventoryPlayer){
+        inventoryPlayer.setSection(InventorySection.MENU_TIENDAS_DOLARES);
+        Inventory inv = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&4Tienda - Dolares"));
+        Player player = inventoryPlayer.getPlayer();
+
+        //relleno
+        ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("  ");
+        item.setItemMeta(meta);
+
+        for (int i = 0; i < 54; i++) {
+            inv.setItem(i, item);
+        }
+
+        // Leer info del jugador
+        String playerName = player.getName();
+        File playerDniFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "dni/" + playerName + ".yml");
+        FileConfiguration playerDniConfig = YamlConfiguration.loadConfiguration(playerDniFile);
+
+        // Item info jugador
+        item = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        meta = item.getItemMeta();
+        String playerDniName = playerDniConfig.getString("Nombre", "Nombre no encontrado"); // Valor predeterminado si "Nombre" no existe
+
+
+        int playerDineroEnBanco = EconomyManager.obtenerBalanceJugador(player);
+
+        meta.setDisplayName(MessageUtils.getColoredMessage("&2Nombre: "+playerDniConfig.getString("Nombre", playerDniName)));
+        List<String> lore = new ArrayList<>();
+
+        lore.add(MessageUtils.getColoredMessage("Dinero en Banco: " + playerDineroEnBanco));
+        meta = item.getItemMeta();
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        inv.setItem(4, item);
+
+        //Dolares 1
+
+        int slot = 10;
+        int dinero = 1;
+
+        for (int i = 0; i < 4; i++) {
+            item = new ItemStack(Material.PAPER, 1);
+            ItemMeta itemMeta =item.getItemMeta();
+            itemMeta.setDisplayName(MessageUtils.getColoredMessage("&2Transaccion $"+dinero));
+            item.setItemMeta(itemMeta);
+            lore = new ArrayList<>();
+            lore.add(MessageUtils.getColoredMessage("&5Click Izquierdo &f- sacar"));
+            lore.add(MessageUtils.getColoredMessage("&bClick Derecho &f- meter"));
+            meta = item.getItemMeta();
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+            inv.setItem(slot, item);
+            slot++;
+            if (dinero == 1){
+                dinero = 10;
+            } else if (dinero == 10){
+                dinero = 50;
+            } else if (dinero == 50){
+                dinero = 100;
+            } else {
+                break;
+            }
+        }
+
+
+
+
+        player.openInventory(inv);
+        players.add(inventoryPlayer);
+
+
+
+        player.openInventory(inv);
+        players.add(inventoryPlayer);
+    }
+
     public void inventoryClick(InventoryPlayer inventoryPlayer, int slot, ClickType clickType) {
 
-        TabletInventoryClickManager.inventoryClick(inventoryPlayer, slot, clickType);
+        InventoryClicksManager.InventorysClick(inventoryPlayer, slot, clickType);
+    }
+
+    public static boolean tieneEspacioEnInventario(String playerName) {
+        Player player = Bukkit.getPlayer(playerName);
+
+        if (player == null || !player.isOnline()) {
+            return false; // Si el jugador no está online, no se puede continuar.
+        }
+
+        // Itera sobre los slots del inventario del jugador
+        for (ItemStack currentItem : player.getInventory().getContents()) {
+            if (currentItem == null) {
+                // Encuentra un espacio vacío
+                return true;
+            }
+        }
+
+        // Si no encontró espacio, devuelve false
+        return false;
     }
 }

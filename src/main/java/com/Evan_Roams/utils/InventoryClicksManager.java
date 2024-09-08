@@ -10,21 +10,21 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.io.IOException;
 
-import static com.Evan_Roams.managers.TabletInventoryManager.*;
-public class TabletInventoryClickManager {
+import static com.Evan_Roams.managers.InventorysManager.*;
+public class InventoryClicksManager {
 
 
     static BankManager bankManager;
     static EconomyManager economyManager;
 
-    public static void inventoryClick(InventoryPlayer inventoryPlayer, int slot, ClickType clickType) {
+    public static void InventorysClick(InventoryPlayer inventoryPlayer, int slot, ClickType clickType) {
 
         Player player = inventoryPlayer.getPlayer();
         InventorySection section = inventoryPlayer.getSection();
@@ -174,6 +174,31 @@ public class TabletInventoryClickManager {
                     player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&4 No tienes dinero suficiente en el banco"));
                 }
             }
+
+        } else if (section.equals(InventorySection.MENU_TIENDAS_DOLARES)) {
+            boolean tieneEspacio = tieneEspacioEnInventario(player.toString());
+            int maxDinero = economyManager.obtenerMaxDineroCuenta(player);
+            int balancePlayer = economyManager.obtenerBalanceJugador(player);
+
+            if (slot == 10 && clickType == ClickType.LEFT) {
+                ItemStack cheque = ItemUtils.generateChequesItem();
+                if (tieneEspacio && balancePlayer > 1){
+                    player.getInventory().addItem(new ItemStack(cheque));
+
+                } else {
+                    if (!tieneEspacio){
+                        player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"No tiene suficiente espacio"));
+                    } else {
+                        player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"No tiene suficiente dinero"));
+                    }
+                    player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"error"));
+                }
+            } else if (slot == 10 && clickType == ClickType.RIGHT) {
+
+            } else if (slot == 40) {
+                openMainInventory(inventoryPlayer);
+            }
+
 
         }
     }

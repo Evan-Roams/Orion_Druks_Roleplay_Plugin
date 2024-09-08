@@ -155,6 +155,10 @@ public class DataManager {
                 // Inicializar con valores por defecto
                 config.set("Nombre", playerDniName);
                 config.set("Se_Busca", false);
+                config.set("Cuenta_Bancaria_Lvl_1", true);
+                config.set("Cuenta_Bancaria_Lvl_2", false);
+                config.set("Cuenta_Bancaria_Lvl_3", false);
+                config.set("Dinero_Banco", 0);
                 config.set("Multas_Por_Pagar", 0);
                 config.set("Valor_en_multas", 0);
                 config.set("Prestamos_por_Pagar", 0);
@@ -211,7 +215,6 @@ public class DataManager {
             writeToFile(logFile, "Log creado: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         }
     }
-
 
     // Método para obtener el archivo de log con la fecha actual
     static File getLogFile(File folder, String logType) {
@@ -285,5 +288,7 @@ public class DataManager {
             sender.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"&fERROR AL AÑADIR LOG"));
         }
     }
+
+
 
 }

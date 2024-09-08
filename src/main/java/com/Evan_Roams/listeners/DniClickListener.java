@@ -38,8 +38,9 @@ public class DniClickListener implements Listener {
             Player player = event.getPlayer();
             ItemStack item = player.getInventory().getItemInMainHand();
 
+            String dniComprobacionNombre = MessageUtils.getColoredMessage("&2DNI");
             // Verifica si el ítem es un DNI
-            if (item.getType() == Material.KNOWLEDGE_BOOK) {
+            if (item.getType() == Material.KNOWLEDGE_BOOK && item.getItemMeta().getDisplayName().equals(dniComprobacionNombre) ) {
                 ItemMeta meta = item.getItemMeta();
                 if (meta != null && meta.hasLore()) {
                     List<String> lore = meta.getLore();
@@ -47,6 +48,7 @@ public class DniClickListener implements Listener {
                         // Extrae el nombre del jugador desde el lore
                         String playerName = lore.get(0);
                         if (!playerName.isEmpty()) {
+                            player.sendMessage(item.getItemMeta().getDisplayName());
                             File playerDniFile = new File(plugin.getDataFolder(), "dni/" + playerName + ".yml");
                             FileConfiguration playerDniConfig = YamlConfiguration.loadConfiguration(playerDniFile);
 

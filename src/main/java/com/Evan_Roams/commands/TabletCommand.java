@@ -65,7 +65,7 @@ public class TabletCommand implements CommandExecutor {
                 player.sendMessage(MessageUtils.getColoredMessage(Os_Druks_Rp_P.prefix+"No tienes permisos para este comando"));
                 return false;
             }
-            plugin.getTabletInventoryManager().openMainInventory(new InventoryPlayer(player));
+            plugin.getInventorysManager().openMainInventory(new InventoryPlayer(player));
         }
 
         return true;

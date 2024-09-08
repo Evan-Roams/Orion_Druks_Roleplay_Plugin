@@ -7,10 +7,15 @@ payments:
   interval: 1800 # Tiempo en segundos (30 minutos)
 
   police:
-    amount:100
+    amount: 10
 
 multas:
   comision_policia: 0.5
 
 loteria:
   loteria_base_precio: 0
+
+banco:
+  Cuenta_lvl_1: 0
+  Cuenta_lvl_2: 0
+  Cuenta_lvl_3: 0

@@ -20,6 +20,7 @@ public class BankManager {
     private final File bankMultasCiudadania;
     private final File bankCuentaLoterias;
     private final File loteriaParticipantesFile;
+
     private final JavaPlugin plugin;
     static DataManager dataManager;
 
@@ -59,6 +60,22 @@ public class BankManager {
                 // Inicializar el balance con 0
                 config.set("Balance", 0);
                 config.save(bankMultasCiudadania);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createDefaultCuentasConfig(File playerFile) {
+        try {
+            if (playerFile.createNewFile()) {
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
+                        config.set("Cuenta_lvl1", 0);
+                        config.set("Cuenta_lvl2", 0);
+                        config.set("Cuenta_lvl3", 0);
+
+                config.save(playerFile);
+                plugin.getLogger().info("Created new config file for player: " + playerFile.getName());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -232,5 +249,6 @@ public class BankManager {
             e.printStackTrace();
         }
     }
+
 
 }

@@ -2,7 +2,6 @@ package com.Evan_Roams.managers;
 
 import com.Evan_Roams.Os_Druks_Rp_P;
 import com.Evan_Roams.utils.MessageUtils;
-import com.Evan_Roams.utils.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,14 +9,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.Evan_Roams.model.InventoryPlayer;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
 
 
-import static com.Evan_Roams.managers.TabletInventoryManager.*;
+import static com.Evan_Roams.managers.InventorysManager.*;
 import static com.Evan_Roams.utils.StringUtils.getDisplayNameForKey;
 
 
@@ -26,8 +25,58 @@ public class EconomyManager {
     private static InventoryPlayer inventoryPlayer;
 
     //Banco Integrado
+    static Plugin plugin;
     static BankManager bankManager;
     static DataManager dataManager;
+
+    public int obtenerMaxDineroCuenta(Player player){
+        String playerName = player.getName();
+        File playerDniFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "dni/" + playerName + ".yml");
+        FileConfiguration playerDniConfig = YamlConfiguration.loadConfiguration(playerDniFile);
+        FileConfiguration config = Os_Druks_Rp_P.getInstance().getConfig();
+
+        if (playerDniConfig.getBoolean("Cuenta_Bancaria_Lvl_1", false)){
+            if (playerDniConfig.getBoolean("Cuenta_Bancaria_Lvl_2", false)){
+                if (playerDniConfig.getBoolean("Cuenta_Bancaria_Lvl_3", false)){
+                    return config.getInt("banco.Cuenta_lvl_3", 0);
+                } else return config.getInt("banco.Cuenta_lvl_2", 0);
+            } else return config.getInt("banco.Cuenta_lvl_1", 0);
+        } else {
+            return 0;
+        }
+    }
+
+    public static int obtenerBalanceJugador(Player player){
+        // Leer info del jugador
+        String playerName = player.getName();
+        File playerDniFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "dni/" + playerName + ".yml");
+        FileConfiguration playerDniConfig = YamlConfiguration.loadConfiguration(playerDniFile);
+
+        return playerDniConfig.getInt("Dinero_Banco", 0);
+
+    }
+
+    public static void actualizarBalance(Player player, int amount){
+        // Leer info del jugador
+        String playerName = player.getName();
+        File playerDniFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "dni/" + playerName + ".yml");
+        FileConfiguration playerDniConfig = YamlConfiguration.loadConfiguration(playerDniFile);
+
+        int playerActualBalance = obtenerBalanceJugador(player);
+
+        if (playerActualBalance == 0 && amount < 0){
+        } else {
+            int playerNewBalance = (playerActualBalance + amount);
+            // Actualizar el archivo YAML del jugador
+            playerDniConfig.set("Dinero_Banco", playerNewBalance);
+            try {
+                playerDniConfig.save(playerDniFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                player.sendMessage(MessageUtils.getColoredMessage("&cError al guardar"));
+            }
+        }
+    }
     
     public static void multarJugador(Player player, Player selectedPlayer, int slot) {
         String selectedPlayerName = selectedPlayer.getName();
@@ -103,7 +152,7 @@ public class EconomyManager {
             //Enviar comision a policia
             double comisionPolicia = Os_Druks_Rp_P.getInstance().getConfig().getDouble("multas.comision_policia", 0.5);
             int comisionPoliciaMulta = (int)(multaValue*comisionPolicia);
-            Os_Druks_Rp_P.getEconomy().depositPlayer(player, comisionPoliciaMulta);
+            actualizarBalance(player, comisionPoliciaMulta);
 
             String razon = ("comisión de multaje de artículo |"+getDisplayNameForKey(multaKey)+"| ");
             dataManager.logTransacciones(player, "Banco[Multas ciudadanía]", player.getName(), razon, comisionPoliciaMulta);
@@ -137,16 +186,21 @@ public class EconomyManager {
 
             if (multaAmount > 0) {
                 if (multaValue > 0) {
-                    // Verificar si el jugador tiene suficiente dinero
-                    double playerBalance = Os_Druks_Rp_P.getEconomy().getBalance(player);
-                    if (playerBalance >= multaValue) {
-                        // Deducir la multa del balance del jugador
-                        Os_Druks_Rp_P.getEconomy().withdrawPlayer(player, multaValue);
+                    // Leer info del jugador
+                    String playerName = player.getName();
+                    File playerDniFile = new File(Os_Druks_Rp_P.getInstance().getDataFolder(), "dni/" + playerName + ".yml");
+                    FileConfiguration playerDniConfig = YamlConfiguration.loadConfiguration(playerDniFile);
 
+                    // Verificar si el jugador tiene suficiente dinero
+                    int playerBalance = obtenerBalanceJugador(player);
+                    if (playerBalance >= multaValue) {
                         // Actualizar el archivo YAML del jugador
                         playerConfig.set(multaKey, multaAmount - 1);
                         try {
+                            // Deducir la multa del balance del jugador
+                            actualizarBalance(player, -multaValue);
                             playerConfig.save(playerFile);
+                            playerDniConfig.save(playerDniFile);
                             player.sendMessage(MessageUtils.getColoredMessage("&aHas pagado la multa '" + multaKey + "' por $" + multaValue + "."));
 
                             BankManager.addToBalanceMultasCiudadania(multaValue, getDisplayNameForKey(multaKey), player); //se añade dinero al banco como si se hubeira desviado
