@@ -61,7 +61,7 @@ public class Os_Druks_Rp_P extends JavaPlugin {
 
 
 
-        // Configura Vault Economy
+        // Configura Vault Economy (es otro plugin aparte)
         setupEconomy();
 
         Bukkit.getConsoleSender().sendMessage(

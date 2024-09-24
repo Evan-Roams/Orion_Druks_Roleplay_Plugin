@@ -75,7 +75,7 @@ public class BankManager {
                         config.set("Cuenta_lvl3", 0);
 
                 config.save(playerFile);
-                plugin.getLogger().info("Created new config file for player: " + playerFile.getName());
+                plugin.getLogger().info("Nuevo archivo de jugador creado: " + playerFile.getName());
             }
         } catch (IOException e) {
             e.printStackTrace();
