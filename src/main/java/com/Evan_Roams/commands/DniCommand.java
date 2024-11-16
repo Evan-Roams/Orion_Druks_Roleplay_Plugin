@@ -26,6 +26,8 @@ public class DniCommand implements CommandExecutor {
         }
     }
 
+    //una pruebita xd
+
     private boolean setupEconomy() {
         RegisteredServiceProvider<Economy> rsp = Os_Druks_Rp_P.getPlugin(Os_Druks_Rp_P.class).getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
