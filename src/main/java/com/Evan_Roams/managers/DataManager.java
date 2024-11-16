@@ -141,7 +141,8 @@ public class DataManager {
     public YamlConfiguration getDniConfig(String playerName) {
         File dniFile = getDniFile(playerName);
         if (!dniFile.exists()) {
-            createDefaultDniConfig(dniFile, playerName);
+             String playerNameTag = playerName.toString();
+            createDefaultDniConfig(dniFile, playerNameTag);
         }
         return YamlConfiguration.loadConfiguration(dniFile);
     }
